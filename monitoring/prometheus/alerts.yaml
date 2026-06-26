@@ -1,0 +1,38 @@
+groups:
+  - name: messaging-app-alerts
+    rules:
+      - alert: HighCPUUsage
+        expr: container_cpu_usage_seconds_total{namespace="messaging-app-prod"} > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage on {{ $labels.pod }}"
+          description: "Pod {{ $labels.pod }} CPU usage is above 80% for 5 minutes."
+
+      - alert: PodCrashLooping
+        expr: rate(kube_pod_container_status_restarts_total{namespace="messaging-app-prod"}[15m]) > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pod {{ $labels.pod }} is crash looping"
+          description: "Pod {{ $labels.pod }} has restarted more than once in the last 15 minutes."
+
+      - alert: HighMemoryUsage
+        expr: container_memory_usage_bytes{namespace="messaging-app-prod"} / container_spec_memory_limit_bytes > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage on {{ $labels.pod }}"
+          description: "Pod {{ $labels.pod }} memory usage is above 85% of its limit."
+
+      - alert: DeploymentReplicasMismatch
+        expr: kube_deployment_spec_replicas{namespace="messaging-app-prod"} != kube_deployment_status_available_replicas{namespace="messaging-app-prod"}
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Deployment replicas mismatch"
+          description: "Deployment {{ $labels.deployment }} has fewer available replicas than desired."
