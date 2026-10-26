@@ -241,4 +241,4 @@ git push → GitHub Actions
 ## Author
 
 **Sourabh Ojha** — DevOps Engineer  
-[LinkedIn](https://www.linkedin.com/in/sourabh-o-52b496413) · [GitHub](https://github.com/yourusername)
+
